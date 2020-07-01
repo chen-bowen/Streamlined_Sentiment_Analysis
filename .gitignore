@@ -3,3 +3,6 @@
 */data/cache
 */data/reviews
 .DS_Store
+*/features/__pycache__/*
+*/models/__pycache__/*
+*/utils/__pycache__
