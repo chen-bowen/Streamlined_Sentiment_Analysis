@@ -13,11 +13,13 @@ class WordFrequencyVectorizer(BaseEstimator):
         self,
         categories=["electronics", "dvd", "kitchen_&_housewares", "books"],
         option="all",
+        **kwargs,
     ):
         self.tokenizer = WordTokenizer()
         self.categories = categories
         self.option = option
         self.set_word_index_mapping()
+        super().__init__(**kwargs)
 
     def set_word_index_mapping(self):
         processed_review = ReviewProcessor(self.categories, self.option)

@@ -25,13 +25,13 @@ class TrainTestSplit:
 
         # X_train and X_test
         X_train = (
-            self.reviews["positive"][:num_positive_test]
-            + self.reviews["positive"][:num_negative_test]
+            self.reviews["positive"][: (num_positive - num_positive_test)]
+            + self.reviews["positive"][: (num_negative - num_negative_test)]
         )
 
         X_test = (
-            self.reviews["positive"][num_positive_test:]
-            + self.reviews["positive"][num_negative_test:]
+            self.reviews["positive"][-num_positive_test:]
+            + self.reviews["positive"][-num_negative_test:]
         )
 
         # y_train and y_test
