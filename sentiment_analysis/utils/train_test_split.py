@@ -5,7 +5,7 @@ import numpy as np
 class TrainTestSplit:
     """ split the entire dataset into positive and negative reviews """
 
-    def __init__(self, test_set_pcnt=0.33):
+    def __init__(self, test_set_pcnt=0.10):
         self.test_set_pcnt = test_set_pcnt
         self.reviews = LoadReviews().reviews
 
@@ -25,13 +25,13 @@ class TrainTestSplit:
 
         # X_train and X_test
         X_train = (
-            self.reviews["positive"][: (num_positive - num_positive_test)]
-            + self.reviews["positive"][: (num_negative - num_negative_test)]
+            self.reviews["positive"][:(-num_positive_test)]
+            + self.reviews["negative"][:(-num_negative_test)]
         )
 
         X_test = (
             self.reviews["positive"][-num_positive_test:]
-            + self.reviews["positive"][-num_negative_test:]
+            + self.reviews["negative"][-num_negative_test:]
         )
 
         # y_train and y_test

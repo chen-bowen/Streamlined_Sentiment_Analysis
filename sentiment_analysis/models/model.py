@@ -15,24 +15,24 @@ class StreamlinedModel:
         self,
         transformer_description,
         model_description,
-        custom_transformer,
-        custom_model,
-        custom_model_params,
+        transformer,
+        model,
+        model_params={},
         **kwargs,
     ):
         self.transformer_description = transformer_description
         self.model_description = model_description
-        self.custom_transformer = custom_transformer
-        self.custom_model = custom_model
-        self.custom_model_params = custom_model_params
+        self.custom_transformer = transformer
+        self.custom_model = model
+        self.custom_model_params = model_params
         self.make_model_pipeline()
-        super().init(**kwargs)
+        super().__init__(**kwargs)
 
     def make_model_pipeline(self):
         """ Build a model pipeline using the word frequency vector transformer and lightGBM classifier"""
         self.pipeline = Pipeline(
             steps=[
-                (self.transformer_description, self.custom_transformer),
+                (self.transformer_description, self.custom_transformer()),
                 (self.model_description, self.custom_model(**self.custom_model_params)),
             ]
         )

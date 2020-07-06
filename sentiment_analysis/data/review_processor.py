@@ -11,34 +11,21 @@ import json
 class ReviewProcessor:
     """ generate processed reviews and word index mapping """
 
-    def __init__(
-        self,
-        categories=["electronics", "dvd", "kitchen_&_housewares", "books"],
-        option="all",
-    ):
-        self.categories = categories
-        self.option = option
+    def __init__(self):
         self._init_file_dir = os.path.dirname(__file__)
+        self.tokenizer = WordTokenizer()
         self.build()
 
-    def __tokenize_all_reviews(self):
+    def __tokenize_all_reviews(self, cached_path):
         """" Tokenize all reviews, preprocess the reviews using custom tokenizer """
         self.reviews_tokenized = defaultdict(dict)
-        tokenizer = WordTokenizer()
         for review_type in ["positive", "negative"]:
-            if self.option != "all":
-                for cat in self.categories:
-                    self.reviews_tokenized[review_type][cat] = [
-                        tokenizer.tokenize_sentence(i)
-                        for i in self.reviews[review_type][cat]
-                    ]
-            else:
-                self.reviews_tokenized[review_type] = [
-                    tokenizer.tokenize_sentence(i) for i in self.reviews[review_type]
-                ]
+            self.reviews_tokenized[review_type] = [
+                self.tokenizer.tokenize_sentence(i) for i in self.reviews[review_type]
+            ]
 
         # save tokenized reviews to cache to speedup build process
-        with open(self.cached_path, "w") as fp:
+        with open(cached_path, "w") as fp:
             json.dump(self.reviews_tokenized, fp)
 
     def build(self):
@@ -68,7 +55,7 @@ class ReviewProcessor:
                 self.reviews_tokenized = json.load(fp)
         else:
             print("Tokenizing reviews ...")
-            self.__tokenize_reviews(cached_path_tokenized)
+            self.__tokenize_all_reviews(cached_path_tokenized)
             print("Completed")
             print("-----------------")
 

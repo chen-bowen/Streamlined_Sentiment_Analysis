@@ -9,20 +9,12 @@ import numpy as np
 class WordFrequencyVectorizer(BaseEstimator):
     """ Generate features in word frequency vectors, used for pipeline """
 
-    def __init__(
-        self,
-        categories=["electronics", "dvd", "kitchen_&_housewares", "books"],
-        option="all",
-        **kwargs,
-    ):
+    def __init__(self, **kwargs):
         self.tokenizer = WordTokenizer()
-        self.categories = categories
-        self.option = option
-        self.set_word_index_mapping()
         super().__init__(**kwargs)
 
     def set_word_index_mapping(self):
-        processed_review = ReviewProcessor(self.categories, self.option)
+        processed_review = ReviewProcessor()
         self.word_to_index_map = processed_review.word_to_index_map
         self.vocab_size = processed_review.vocab_size
 
@@ -31,33 +23,26 @@ class WordFrequencyVectorizer(BaseEstimator):
         # get the tokenized review from the review text
         tokenized_review = self.tokenizer.tokenize_sentence(review_text)
 
-        # replace the unknown word with unknown_word token
-        tokenized_review_processed = [
-            word if word in list(self.word_to_index_map) else "unknown_word"
-            for word in tokenized_review
-        ]
-
-        # get count for all words appeared in the tokenized review
-        word_frequency_count = Counter(tokenized_review_processed)
-
-        # map all the words to indices using the word to index map
-        word_frequency_count_ind = {
-            self.word_to_index_map[word]: count
-            for word, count in word_frequency_count.items()
-        }
-
-        # flatten to a vector that equals to the vocabulary size + 1 (last index for unknown word)
+        # flatten to a vector that equals to the vocabulary size + 2 (unknown word token and label)
         word_frequency_vector = np.zeros(len(self.word_to_index_map) + 1)
-        for ind, count in word_frequency_count_ind.items():
-            word_frequency_vector[ind] += count
+        for w in tokenized_review:
+            if w in self.word_to_index_map.keys():
+                word_frequency_vector[self.word_to_index_map[w]] += 1
+            else:
+                word_frequency_vector[-1] += 1
+
+        # normalize the raw counts
+        word_frequency_vector = word_frequency_vector / word_frequency_vector.sum()
 
         return word_frequency_vector
 
     def fit(self, X, y=None):
+        self.set_word_index_mapping()
         return self
 
     def transform(self, X, y=None):
         """ Get the word frequency vectors for all tokenized reviews """
-        word_frequency_vectors = list(map(self.get_word_frequency_vector, X))
-        word_frequency_matrix = np.stack(word_frequency_vectors, axis=0)
+        word_frequency_matrix = np.zeros((len(X), len(self.word_to_index_map) + 1))
+        for i, review in enumerate(X):
+            word_frequency_matrix[i, :] = self.get_word_frequency_vector(review)
         return word_frequency_matrix
