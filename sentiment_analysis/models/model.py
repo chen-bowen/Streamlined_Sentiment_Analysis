@@ -41,7 +41,17 @@ class StreamlinedModel:
         """ Train the model using the pipeline constructed """
         self.pipeline.fit(X_train, y_train)
 
-    def predict(self, X_test):
+    def predict(self, X):
         """ Predict with the pipeline created and return the predictions"""
-        y_pred = self.pipeline.predict(X_test)
+        y_pred = self.pipeline.predict(X)
         return y_pred
+
+    def predict_proba(self, X):
+        """ Get the prediction probabilities """
+        y_prob = self.pipeline.predict_proba(X)
+        return y_prob
+
+    def score(self, X, y):
+        """ Generate preliminary scores from the pipeline """
+        accuracy_score = self.pipeline.score(X, y)
+        return accuracy_score
