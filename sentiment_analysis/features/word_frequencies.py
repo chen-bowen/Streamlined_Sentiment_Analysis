@@ -23,8 +23,8 @@ class WordFrequencyVectorizer(BaseEstimator):
         # get the tokenized review from the review text
         tokenized_review = self.tokenizer.tokenize_sentence(review_text)
 
-        # flatten to a vector that equals to the vocabulary size + 2 (unknown word token and label)
-        word_frequency_vector = np.zeros(len(self.word_to_index_map) + 1)
+        # flatten to a vector that equals to the vocabulary size
+        word_frequency_vector = np.zeros(len(self.word_to_index_map))
         for w in tokenized_review:
             if w in self.word_to_index_map.keys():
                 word_frequency_vector[self.word_to_index_map[w]] += 1
@@ -42,7 +42,7 @@ class WordFrequencyVectorizer(BaseEstimator):
 
     def transform(self, X, y=None):
         """ Get the word frequency vectors for all tokenized reviews """
-        word_frequency_matrix = np.zeros((len(X), len(self.word_to_index_map) + 1))
+        word_frequency_matrix = np.zeros((len(X), len(self.word_to_index_map)))
         for i, review in enumerate(X):
             word_frequency_matrix[i, :] = self.get_word_frequency_vector(review)
         return word_frequency_matrix
