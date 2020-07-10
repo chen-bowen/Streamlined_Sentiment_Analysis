@@ -88,6 +88,7 @@ class ReviewProcessor:
         if os.path.exists(cached_path_word_index_mapping):
             with open(cached_path_word_index_mapping, "r") as fp:
                 self.word_to_index_map = json.load(fp)
+            self.vocab_size = len(self.word_to_index_map)
         else:
             print("Building word to index map ...")
             self.__build_word_index_mapping(cached_path_word_index_mapping)
