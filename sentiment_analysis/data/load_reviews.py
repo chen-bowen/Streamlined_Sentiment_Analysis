@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from collections import defaultdict
 import os
+import sys
 import numpy as np
 from itertools import chain
 import json
@@ -9,6 +10,10 @@ import json
 class LoadReviews:
     """ Utility class to load reviews """
 
+    NONPRINT_TRANS_TABLE = {
+        i: None for i in range(0, sys.maxunicode + 1) if not chr(i).isprintable()
+    }
+
     def __init__(
         self, cached_path=os.path.join(os.path.dirname(__file__), "cache/reviews.json")
     ):
@@ -16,6 +21,11 @@ class LoadReviews:
         self.categories = ["electronics", "dvd", "kitchen_&_housewares", "books"]
         self.cached_path = cached_path
         self.load_reviews()
+
+    @staticmethod
+    def strip_non_printable(string):
+        """ strip all the non printable characters in a string """
+        return string.translate(LoadReviews.NONPRINT_TRANS_TABLE)
 
     def load_reviews(self):
         """ Load all reviews from the data folder """
@@ -32,7 +42,8 @@ class LoadReviews:
                     open(file_path).read(), features="html.parser"
                 )
                 self.reviews[review_type][cat] = [
-                    review.text for review in reviews_raw.find_all("review_text")
+                    self.strip_non_printable(review.text)
+                    for review in reviews_raw.find_all("review_text")
                 ]
 
                 # merge all categories into one

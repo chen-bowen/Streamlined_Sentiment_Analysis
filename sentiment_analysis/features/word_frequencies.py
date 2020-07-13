@@ -13,10 +13,10 @@ class WordFrequencyVectorizer(BaseEstimator):
         self.tokenizer = WordTokenizer()
         super().__init__(**kwargs)
 
-    def set_word_index_mapping(self):
-        processed_review = ReviewProcessor()
+    def set_word_index_mapping(self, reviews_text):
+        """ Initialize the review processor with the inputted reviews text """
+        processed_review = ReviewProcessor(reviews_text)
         self.word_to_index_map = processed_review.word_to_index_map
-        self.vocab_size = processed_review.vocab_size
 
     def get_word_frequency_vector(self, review_text):
         """ Get the word frequency vector for one tokenized review"""
@@ -37,7 +37,7 @@ class WordFrequencyVectorizer(BaseEstimator):
         return word_frequency_vector
 
     def fit(self, X, y=None):
-        self.set_word_index_mapping()
+        self.set_word_index_mapping(X)
         return self
 
     def transform(self, X, y=None):

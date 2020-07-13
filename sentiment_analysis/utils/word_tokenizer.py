@@ -14,6 +14,8 @@ class WordTokenizer:
         wordnet_lemmatizer = WordNetLemmatizer()
         # lower case
         s = s.lower()
+        # strip punctuation
+        s = s.translate(str.maketrans(string.punctuation, " " * len(string.punctuation)))
         # split string into words (tokens)
         tokens = nltk.tokenize.word_tokenize(s)
         # remove short words, they're probably not useful
