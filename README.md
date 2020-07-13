@@ -1,4 +1,4 @@
-# Interpretable Sentiment Analysis
+# Streamlined Sentiment Analysis with Custom Feature Extractors
 
 The classic sentiment analysis project, now with a slight different twist in the challenge level. 
 
