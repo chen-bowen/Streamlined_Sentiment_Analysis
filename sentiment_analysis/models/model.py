@@ -29,7 +29,7 @@ class StreamlinedModel:
         super().__init__(**kwargs)
 
     def make_model_pipeline(self):
-        """ Build a model pipeline using the word frequency vector transformer and lightGBM classifier"""
+        """ Build a model pipeline using the transformer and the model"""
         self.pipeline = Pipeline(
             steps=[
                 (self.transformer_description, self.custom_transformer()),
