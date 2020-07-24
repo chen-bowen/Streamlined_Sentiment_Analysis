@@ -17,7 +17,7 @@ class WordTokenizer:
         # strip punctuation
         s = s.translate(str.maketrans(string.punctuation, " " * len(string.punctuation)))
         # split string into words (tokens)
-        tokens = nltk.tokenize.word_tokenize(s)
+        tokens = s.split()
         # remove short words, they're probably not useful
         tokens = [t for t in tokens if len(t) > 2]
         # put words into base form
