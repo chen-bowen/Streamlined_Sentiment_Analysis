@@ -43,21 +43,6 @@ class ReviewProcessor:
 
     def build(self):
         """ Tokenize and build the word to index mapping, word to vector mapping"""
-        # tokenize reviews
-        cached_path_tokenized = os.path.join(
-            self._init_file_dir, "cache/reviews_tokenized.json"
-        )
-
-        # use cached file if exists
-        if os.path.exists(cached_path_tokenized):
-            with open(cached_path_tokenized, "r") as fp:
-                self.reviews_tokenized = json.load(fp)
-        else:
-            print("Tokenizing reviews ...")
-            self.__tokenize_all_reviews(cached_path_tokenized)
-            print("Completed")
-            print("-----------------")
-
         # build word to index mapping, which is later used to map the word frequency column index to words
         cached_path_word_index_mapping = os.path.join(
             self._init_file_dir, "cache/word_index_mapping.json"
@@ -69,7 +54,27 @@ class ReviewProcessor:
             self.vocab_size = len(self.word_to_index_map)
             self.all_unique_words = list(self.word_to_index_map.keys())
         else:
+            # tokenize reviews
+            cached_path_tokenized = os.path.join(
+                self._init_file_dir, "cache/reviews_tokenized.json"
+            )
+
+            # use cached file if exists
+            if os.path.exists(cached_path_tokenized):
+                with open(cached_path_tokenized, "r") as fp:
+                    self.reviews_tokenized = json.load(fp)
+            else:
+                print("Tokenizing reviews ...")
+                self.__tokenize_all_reviews(cached_path_tokenized)
+                print("Completed")
+                print("-----------------")
+
+
             print("Building word to index map ...")
             self.__build_word_index_mapping(cached_path_word_index_mapping)
             print("Completed")
             print("-----------------")
+
+
+
+

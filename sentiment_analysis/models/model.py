@@ -7,7 +7,7 @@ from sentiment_analysis.features.word_frequencies import WordFrequencyVectorizer
 
 
 class StreamlinedModel:
-    """ 
+    """  
     Streamlined model pipeline
     """
 

@@ -50,7 +50,7 @@ class LoadReviews:
             self.reviews[review_type] = list(
                 chain(*list(self.reviews[review_type].values()))
             )
-            np.random.shuffle(self.reviews[review_type])
+            np.random.shuffle(self.reviews[review_type], seed=7)
 
         # save tokenized reviews to cache to speedup build process
         with open(self.cached_path, "w") as fp:
